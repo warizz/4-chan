@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+  <style media="screen">
+    * {
+      box-sizing: border-box;
+    }
+
+    #canvas > h1 {
+      font-size: 5em;
+      text-align: center;
+      margin: 10px;
+    }
+
+    #canvas > #images {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    #canvas > #images > div {
+      flex: 1 1 50%;
+      padding: 0.5em;
+    }
+
+    #canvas > #images > div > img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      border: 1px solid grey;
+      border-radius: 3px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <input class="form-control" id="header-text-input" type="text" />
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <input class="form-control" id="file-1" type="file" onchange="readURL('file-1', 'pic-1')" />
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <input class="form-control" id="file-2" type="file" onchange="readURL('file-2', 'pic-2')" />
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <input class="form-control" id="file-3" type="file" onchange="readURL('file-3', 'pic-3')" />
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <input class="form-control" id="file-4" type="file" onchange="readURL('file-4', 'pic-4')" />
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="save()">Download</button>
+
+    <div id="canvas">
+      <h1 id="header-text"></h1>
+      <div id="images">
+        <div><img id="pic-1" /></div>
+        <div><img id="pic-2" /></div>
+        <div><img id="pic-3" /></div>
+        <div><img id="pic-4" /></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script type="text/javascript">
+    document.getElementById('header-text-input').oninput = function(e) {
+      document.getElementById('header-text').innerHTML = e.target.value;
+    };
+
+    function readURL(inputId, divKey) {
+      var file = document.getElementById(inputId).files[0];
+      if (file) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          var div = document.getElementById(divKey);
+          div.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function save() {
+      var element = document.getElementById("canvas");
+      element.style.width = '1200px';
+      html2canvas(element).then(canvas => {
+        saveAs(canvas.toDataURL(), '4-chan.png');
+      });
+    }
+
+    function saveAs(uri, filename) {
+      var link = document.createElement('a');
+      if (typeof link.download === 'string') {
+
+        link.href = uri;
+        link.download = filename;
+
+        //Firefox requires the link to be in the body
+        document.body.appendChild(link);
+
+        //simulate click
+        link.click();
+        //remove the link when done
+        document.body.removeChild(link);
+      } else {
+        window.open(uri);
+      }
+    }
+  </script>
+</body>
+
+</html>
